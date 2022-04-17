@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
-
+import AddIcon from '@mui/icons-material/Add';
 
 export default function AddItem() {
   return (
@@ -18,8 +18,7 @@ export default function AddItem() {
       autoComplete="off"
     >
         <Input placeholder="Enter Task" />
-        <Button variant="contained" endIcon={<SendIcon />}>
-            Send
+        <Button variant="contained" endIcon={<AddIcon />}>
         </Button>
     </Stack>
   );
