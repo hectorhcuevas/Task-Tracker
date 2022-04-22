@@ -18,6 +18,8 @@ import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import AddIcon from '@mui/icons-material/Add';
 import Divider from '@mui/material/Divider';
+import Box from '@mui/material/Box';
+import './ToDoList.css';
 
 
 
@@ -28,9 +30,8 @@ export default function ToDoList() {
   const [list, setList] = useState([]);
   const [completedTask, setCompletedTask] = useState("");
   const [completedList, setCompletedList] = useState([]);
-  const textInput = useRef('');
-
-
+  const [value, setValue] = useState('');
+  const textInput = useRef(null);
 
   function handleAdd() {
     setTask('');
@@ -38,6 +39,7 @@ export default function ToDoList() {
       ...list,
       { id: nextId++, task: task }
     ]);
+    textInput.current.value = "";
   }
 
   function handleCompletedAdd(task) {
@@ -46,7 +48,6 @@ export default function ToDoList() {
       ...completedList,
       { id: nextId++, completedTask: task }
     ]);
-    console.log(completedList);
   }
 
   function handleRemove() {
@@ -60,22 +61,29 @@ export default function ToDoList() {
 
 
   return (
-    <Stack direction="row" divider={<Divider orientation="vertical" flexItem />}>
-      <Stack>
+    <Stack container spacing={5} direction="row" divider={<Divider orientation="vertical" flexItem />}>
+      <Stack container justifyContent="space-between">
         <TextField
+              className="toDoListText"
               variant="outlined"
+              inputRef={textInput}
                placeholder="Add todo"
                margin="normal"
-              onChange={e => setTask(e.target.value)} />
-            <Button type="submit" variant="contained" endIcon={<AddIcon />} onClick={handleAdd}>
+              onChange={e => { setTask(e.target.value); setValue('');} }/>
+            <Button className="addButton" type="submit" variant="contained" endIcon={<AddIcon />} onClick={ handleAdd } >
             </Button>
-      <List>
+      <List className="toDoList">
       <ListSubheader component="div" id="nested-list-subheader">
         To-Do Tasks
       </ListSubheader>
       {list.map(task => (
         <ListItem key={task.id} dense button>
-          <ListItemText primary={task.task} />
+          <Checkbox className="checkbox" tabIndex={-1} disableRipple onChange={ e => { handleCompletedAdd(task.task);
+              setList(
+                list.filter(a =>
+                  a.id !== task.id
+                ) ) } }/>
+          <ListItemText primary={task.task} sx={{ margin: 2 }} />
               <Button type="submit" variant="contained" endIcon={<DeleteIcon />} onClick={() => {
               setList(
                 list.filter(a =>
@@ -84,32 +92,31 @@ export default function ToDoList() {
               ); 
             }}>
             </Button>
-          <Checkbox tabIndex={-1} disableRipple onChange={ e => { handleCompletedAdd(task.task);
-              setList(
-                list.filter(a =>
-                  a.id !== task.id
-                ) ) } }/>
         </ListItem>
       ))}
     </List>
-    </Stack>
-    <List>
+    </Stack >
+    <Box container spacing={5} justifyContent="space-between" > 
+    <List className="completedList">
       <ListSubheader component="div" id="nested-list-subheader">
         Completed Tasks
       </ListSubheader>
       {completedList.map(completedTask => (
         <ListItem key={completedTask.id} dense button>
-          <ListItemText primary={completedTask.completedTask} />
+          <ListItemText primary={completedTask.completedTask} sx={{ margin: 2 }} />
               <Button type="submit" variant="contained" endIcon={<DeleteIcon />} onClick={() => {
               setCompletedList(
                 completedList.filter(a =>
                   a.id !== completedTask.id
                 )
               );
-            }}>
+            }}
+            sx={{ width: 50 }} 
+            >
             </Button>
         </ListItem>
       ))}
-    </List>
-        </Stack>
+      </List>
+      </Box>
+    </Stack>
   )};

@@ -11,7 +11,11 @@ import "./homepage.css";
 
 export default function Home() {
     return (
-      <Box sx={{ width: '100%' }}>
+      <Box sx={{ width: '100%' }}   
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+    >
            <ToDoList />
       </Box>
     );
