@@ -84,7 +84,11 @@ export default function ToDoList() {
               ); 
             }}>
             </Button>
-          <Checkbox tabIndex={-1} disableRipple onChange={ e => { handleCompletedAdd(task.task) } }/>
+          <Checkbox tabIndex={-1} disableRipple onChange={ e => { handleCompletedAdd(task.task);
+              setList(
+                list.filter(a =>
+                  a.id !== task.id
+                ) ) } }/>
         </ListItem>
       ))}
     </List>
