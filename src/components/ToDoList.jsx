@@ -1,8 +1,9 @@
 import React, {useState, useEffect, Component, useRef} from 'react';
-import MUIDataTable from "mui-datatables";import List from '@mui/material/List';
+import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import EditIcon from '@mui/icons-material/Edit';
 import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
@@ -17,6 +18,7 @@ import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import AddIcon from '@mui/icons-material/Add';
+import UndoIcon from '@mui/icons-material/Undo';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
 import './ToDoList.css';
@@ -42,6 +44,15 @@ export default function ToDoList() {
     textInput.current.value = "";
   }
 
+  function handleNewCompletedAdd() {
+    setCompletedTask('');
+    setCompletedList([
+      ...list,
+      { id: nextId++, completedTask: completedTask }
+    ]);
+    textInput.current.value = "";
+  }
+
   function handleCompletedAdd(task) {
     console.log(task);
     setCompletedList([
@@ -49,6 +60,7 @@ export default function ToDoList() {
       { id: nextId++, completedTask: task }
     ]);
   }
+
 
   function handleRemove() {
     // remove item
@@ -59,10 +71,26 @@ export default function ToDoList() {
     )
   };
 
+  function handleUndo(completedTask) {
+    console.log(completedTask);
+    setList([
+      ...list,
+      { id: nextId++, task: completedTask }
+    ]);
+  };
+
+  function handleChange() {
+    setList(
+      list.filter(e =>
+        e.id !== task.id
+      )
+    )
+  };
+
 
   return (
     <Stack container spacing={5} direction="row" divider={<Divider orientation="vertical" flexItem />}>
-      <Stack container justifyContent="space-between">
+      <Stack container>
         <TextField
               className="toDoListText"
               variant="outlined"
@@ -83,7 +111,10 @@ export default function ToDoList() {
                 list.filter(a =>
                   a.id !== task.id
                 ) ) } }/>
-          <ListItemText primary={task.task} sx={{ margin: 2 }} />
+          <ListItemText primary={task.task} sx={{ margin: 2 }} inputRef={textInput} />
+              <Button type="submit" variant="contained" endIcon={<EditIcon />} onClick={handleChange}
+              >
+              </Button>
               <Button type="submit" variant="contained" endIcon={<DeleteIcon />} onClick={() => {
               setList(
                 list.filter(a =>
@@ -96,14 +127,33 @@ export default function ToDoList() {
       ))}
     </List>
     </Stack >
-    <Box container spacing={5} justifyContent="space-between" > 
+    <Stack container > 
+    <TextField
+              className="toDoListText"
+              variant="outlined"
+              inputRef={textInput}
+               placeholder="Add todo"
+               margin="normal"
+              onChange={e => { setCompletedTask(e.target.value); setValue('');} }/>
+            <Button className="addButton" type="submit" variant="contained" endIcon={<AddIcon />} onClick={ handleNewCompletedAdd }>
+            </Button>
     <List className="completedList">
       <ListSubheader component="div" id="nested-list-subheader">
         Completed Tasks
       </ListSubheader>
       {completedList.map(completedTask => (
         <ListItem key={completedTask.id} dense button>
-          <ListItemText primary={completedTask.completedTask} sx={{ margin: 2 }} />
+              <Button className="undoCompletedTask" endIcon={<UndoIcon />} tabIndex={-1} disableRipple onClick={ e => { handleUndo(completedTask.completedTask); 
+                  setCompletedList(
+                    completedList.filter(a =>
+                      a.id !== completedTask.id
+                    )
+                  ); } }>
+                </Button>
+          <ListItemText primary={completedTask.completedTask} sx={{ margin: 2 }} /> 
+              <Button type="submit" variant="contained" endIcon={<EditIcon />} onClick={handleChange}
+              >
+              </Button>
               <Button type="submit" variant="contained" endIcon={<DeleteIcon />} onClick={() => {
               setCompletedList(
                 completedList.filter(a =>
@@ -117,6 +167,6 @@ export default function ToDoList() {
         </ListItem>
       ))}
       </List>
-      </Box>
+      </Stack>
     </Stack>
   )};
