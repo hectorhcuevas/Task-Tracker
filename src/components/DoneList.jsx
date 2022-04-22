@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState, useEffect, Component} from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -10,10 +10,15 @@ import ListSubheader from '@mui/material/ListSubheader';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Constants from './constants';
+import Button from '@mui/material/Button';
+
+
 
 
 
 export default function DoneList() {
+  const initialTasks = ["go fishing", "run 30min", "call mom"]
+  /* old code for check mark handling
   const [checked, setChecked] = React.useState([0]);
   const completedTasks = Constants.completedTasks;
 
@@ -29,48 +34,11 @@ export default function DoneList() {
 
     setChecked(newChecked);
   };
+  below is attr for checkbox
+   checked={checked.indexOf() !== -1}
+
+  */
 
   return (
-    <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }} 
-    subheader={
-      <ListSubheader component="div" id="nested-list-subheader">
-       Completed Tasks
-      </ListSubheader>}>
-      {completedTasks.map(() => {
-        const labelId = `checkbox-list-label-$`;
-        return (
-          
-          <ListItem
-            key={"placeholder"}
-            secondaryAction={
-              <IconButton edge="end" aria-label="comments">
-              </IconButton>
-            }
-            disablePadding
-          >
-            <ListItemButton role={undefined} onClick={handleToggle()} dense>
-              <ListItemIcon>
-                <Checkbox
-                  edge="start"
-                  checked={checked.indexOf() !== -1}
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{ 'aria-labelledby': labelId }}
-                />
-              </ListItemIcon>
-              <ListItemText id={labelId} primary={`Line item ${1 + 1}`} />
-            </ListItemButton>
-            <ListItemSecondaryAction>
-                <IconButton
-                  aria-label="Delete"
-                  onClick={console.log("deleted")}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
-          </ListItem>
-        );
-      })}
-    </List>
-  );
-}
+    console.log("obsolete")
+  )}

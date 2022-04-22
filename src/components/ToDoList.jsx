@@ -1,4 +1,4 @@
-import React, {useState, useEffect, Component} from 'react';
+import React, {useState, useEffect, Component, useRef} from 'react';
 import MUIDataTable from "mui-datatables";import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -17,6 +17,8 @@ import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import AddIcon from '@mui/icons-material/Add';
+import Divider from '@mui/material/Divider';
+
 
 
 let nextId = 0;
@@ -24,6 +26,11 @@ let nextId = 0;
 export default function ToDoList() {
   const [task, setTask] = useState("")
   const [list, setList] = useState([]);
+  const [completedTask, setCompletedTask] = useState("");
+  const [completedList, setCompletedList] = useState([]);
+  const textInput = useRef('');
+
+
 
   function handleAdd() {
     setTask('');
@@ -31,6 +38,15 @@ export default function ToDoList() {
       ...list,
       { id: nextId++, task: task }
     ]);
+  }
+
+  function handleCompletedAdd(task) {
+    console.log(task);
+    setCompletedList([
+      ...completedList,
+      { id: nextId++, completedTask: task }
+    ]);
+    console.log(completedList);
   }
 
   function handleRemove() {
@@ -42,7 +58,9 @@ export default function ToDoList() {
     )
   };
 
+
   return (
+    <Stack direction="row" divider={<Divider orientation="vertical" flexItem />}>
       <Stack>
         <TextField
               variant="outlined"
@@ -57,12 +75,31 @@ export default function ToDoList() {
       </ListSubheader>
       {list.map(task => (
         <ListItem key={task.id} dense button>
-          <Checkbox tabIndex={-1} disableRipple />
           <ListItemText primary={task.task} />
               <Button type="submit" variant="contained" endIcon={<DeleteIcon />} onClick={() => {
               setList(
                 list.filter(a =>
                   a.id !== task.id
+                )
+              ); 
+            }}>
+            </Button>
+          <Checkbox tabIndex={-1} disableRipple onChange={ e => { handleCompletedAdd(task.task) } }/>
+        </ListItem>
+      ))}
+    </List>
+    </Stack>
+    <List>
+      <ListSubheader component="div" id="nested-list-subheader">
+        Completed Tasks
+      </ListSubheader>
+      {completedList.map(completedTask => (
+        <ListItem key={completedTask.id} dense button>
+          <ListItemText primary={completedTask.completedTask} />
+              <Button type="submit" variant="contained" endIcon={<DeleteIcon />} onClick={() => {
+              setCompletedList(
+                completedList.filter(a =>
+                  a.id !== completedTask.id
                 )
               );
             }}>
@@ -70,5 +107,5 @@ export default function ToDoList() {
         </ListItem>
       ))}
     </List>
-    </Stack>
+        </Stack>
   )};

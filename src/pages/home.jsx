@@ -12,10 +12,7 @@ import "./homepage.css";
 export default function Home() {
     return (
       <Box sx={{ width: '100%' }}>
-          <Stack direction="row" divider={<Divider orientation="vertical" flexItem />}>
            <ToDoList />
-           <DoneList />
-          </Stack>
       </Box>
     );
   }
