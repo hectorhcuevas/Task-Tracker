@@ -47,7 +47,7 @@ export default function ToDoList() {
   function handleNewCompletedAdd() {
     setCompletedTask('');
     setCompletedList([
-      ...list,
+      ...completedList,
       { id: nextId++, completedTask: completedTask }
     ]);
     textInput.current.value = "";
@@ -97,6 +97,7 @@ export default function ToDoList() {
               inputRef={textInput}
                placeholder="Add todo"
                margin="normal"
+               type="search"
               onChange={e => { setTask(e.target.value); setValue('');} }/>
             <Button className="addButton" type="submit" variant="contained" endIcon={<AddIcon />} onClick={ handleAdd } >
             </Button>
@@ -134,6 +135,7 @@ export default function ToDoList() {
               inputRef={textInput}
                placeholder="Add todo"
                margin="normal"
+               type="search"
               onChange={e => { setCompletedTask(e.target.value); setValue('');} }/>
             <Button className="addButton" type="submit" variant="contained" endIcon={<AddIcon />} onClick={ handleNewCompletedAdd }>
             </Button>

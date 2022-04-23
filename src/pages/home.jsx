@@ -6,11 +6,22 @@ import ToDoList from '../components/ToDoList';
 import DoneList from '../components/DoneList';
 import AddItem from '../components/AddItem';
 import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 import "./homepage.css";
 
 
 export default function Home() {
     return (
+      <Stack>
+      <Box sx={{ width: '100%' }}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+      >
+      <Typography variant="h1" component="div" gutterBottom>
+        Task Tracker
+      </Typography>
+      </Box>
       <Box sx={{ width: '100%' }}   
       display="flex"
       justifyContent="center"
@@ -18,5 +29,6 @@ export default function Home() {
     >
            <ToDoList />
       </Box>
+      </Stack>
     );
   }
