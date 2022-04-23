@@ -32,8 +32,9 @@ export default function ToDoList() {
   const [list, setList] = useState([]);
   const [completedTask, setCompletedTask] = useState("");
   const [completedList, setCompletedList] = useState([]);
+  const [isEditing, setIsEditing] = useState(false)
   const [value, setValue] = useState('');
-  const textInput = useRef(null);
+  const textInput = useRef("");
 
   function handleAdd() {
     setTask('');
@@ -80,11 +81,7 @@ export default function ToDoList() {
   };
 
   function handleChange() {
-    setList(
-      list.filter(e =>
-        e.id !== task.id
-      )
-    )
+    setIsEditing(true);
   };
 
 
@@ -130,12 +127,12 @@ export default function ToDoList() {
     </Stack >
     <Stack container > 
     <TextField
+              type="search"
               className="toDoListText"
               variant="outlined"
               inputRef={textInput}
                placeholder="Add todo"
                margin="normal"
-               type="search"
               onChange={e => { setCompletedTask(e.target.value); setValue('');} }/>
             <Button className="addButton" type="submit" variant="contained" endIcon={<AddIcon />} onClick={ handleNewCompletedAdd }>
             </Button>
@@ -152,7 +149,21 @@ export default function ToDoList() {
                     )
                   ); } }>
                 </Button>
-          <ListItemText primary={completedTask.completedTask} sx={{ margin: 2 }} /> 
+          { isEditing ? 
+                    (
+                      <TextField
+                        className="toDoListText"
+                        variant="outlined"
+                        inputRef={textInput}
+                         placeholder="Add todo"
+                         margin="normal"
+                         type="search"
+                        onChange={e => { setTask(e.target.value); setValue('');} }/>
+                    )
+          :
+          (
+            <ListItemText primary={completedTask.completedTask} sx={{ margin: 2 }} /> 
+          )}
               <Button type="submit" variant="contained" endIcon={<EditIcon />} onClick={handleChange}
               >
               </Button>
