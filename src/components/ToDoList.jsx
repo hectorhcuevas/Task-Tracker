@@ -33,11 +33,12 @@ export default function ToDoList() {
   const [completedTask, setCompletedTask] = useState("");
   const [completedList, setCompletedList] = useState([]);
   const [isEditing, setIsEditing] = useState(false)
+  const [isEditingTodo, setIsEditingTodo] = useState(false)
   const [value, setValue] = useState('');
   const [editValue, setEditValue] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(null);
 
-
+  const textInputTodo = useRef("")
   const textInput = useRef("");
   const editInput = useRef(null);
 
@@ -51,7 +52,7 @@ export default function ToDoList() {
       ...list,
       { id: nextId++, task: task }
     ]);
-    textInput.current.value = "";
+    textInputTodo.current.value = "";
   }
 
   function handleNewCompletedAdd() {
@@ -128,11 +129,11 @@ export default function ToDoList() {
         <TextField
               className="toDoListText"
               variant="outlined"
-              inputRef={textInput}
+              inputRef={textInputTodo}
                placeholder="Add todo"
                margin="normal"
                type="search"
-              onChange={e => { setTask(e.target.edit); setValue('');} }/>
+              onChange={e => { setTask(e.target.value); setValue('');} }/>
             <Button className="addButton" type="submit" variant="contained" endIcon={<AddIcon />} onClick={ handleAdd } >
             </Button>
       <List className="toDoList">
