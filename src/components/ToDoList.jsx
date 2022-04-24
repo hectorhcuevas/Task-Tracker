@@ -34,7 +34,16 @@ export default function ToDoList() {
   const [completedList, setCompletedList] = useState([]);
   const [isEditing, setIsEditing] = useState(false)
   const [value, setValue] = useState('');
+  const [editValue, setEditValue] = useState('');
+  const [selectedIndex, setSelectedIndex] = useState(null);
+
+
   const textInput = useRef("");
+  const editInput = useRef(null);
+
+  const setActive = (index) => {
+    setSelectedIndex(index);
+};
 
   function handleAdd() {
     setTask('');
@@ -80,10 +89,38 @@ export default function ToDoList() {
     ]);
   };
 
-  function handleChange() {
+  function handleEdit(e) {
     setIsEditing(true);
+    //setCompletedTask(e.target.value);
   };
 
+
+  function handleRemoveEdit() {
+    // remove item
+    setCompletedList(
+      completedList.filter(e =>
+        e.id !== completedTask.id
+      )
+    )
+  };
+
+  function handleEditAdd() {
+    setCompletedTask("");
+    setIsEditing(false);
+    setCompletedList([
+      ...completedList,
+      { id: nextId++, completedTask: completedTask
+    }
+    ]);
+    editInput.current.value = "";
+  }
+
+  function updateFieldChanged(index) {
+    const newArr = [...completedList];
+    newArr[index].completedTask = editInput.current.value
+    setCompletedList(newArr);
+  }
+  
 
   return (
     <Stack container spacing={5} direction="row" divider={<Divider orientation="vertical" flexItem />}>
@@ -95,7 +132,7 @@ export default function ToDoList() {
                placeholder="Add todo"
                margin="normal"
                type="search"
-              onChange={e => { setTask(e.target.value); setValue('');} }/>
+              onChange={e => { setTask(e.target.edit); setValue('');} }/>
             <Button className="addButton" type="submit" variant="contained" endIcon={<AddIcon />} onClick={ handleAdd } >
             </Button>
       <List className="toDoList">
@@ -110,7 +147,7 @@ export default function ToDoList() {
                   a.id !== task.id
                 ) ) } }/>
           <ListItemText primary={task.task} sx={{ margin: 2 }} inputRef={textInput} />
-              <Button type="submit" variant="contained" endIcon={<EditIcon />} onClick={handleChange}
+              <Button type="submit" variant="contained" endIcon={<EditIcon />} onClick={handleEdit}
               >
               </Button>
               <Button type="submit" variant="contained" endIcon={<DeleteIcon />} onClick={() => {
@@ -140,8 +177,8 @@ export default function ToDoList() {
       <ListSubheader component="div" id="nested-list-subheader">
         Completed Tasks
       </ListSubheader>
-      {completedList.map(completedTask => (
-        <ListItem key={completedTask.id} dense button>
+      {completedList.map((completedTask, index) => (
+        <ListItem key={completedTask.id} dense button onClick={(e) => { setActive(index); }} >
               <Button className="undoCompletedTask" endIcon={<UndoIcon />} tabIndex={-1} disableRipple onClick={ e => { handleUndo(completedTask.completedTask); 
                   setCompletedList(
                     completedList.filter(a =>
@@ -151,20 +188,31 @@ export default function ToDoList() {
                 </Button>
           { isEditing ? 
                     (
+                      <Stack>
                       <TextField
                         className="toDoListText"
                         variant="outlined"
-                        inputRef={textInput}
+                        inputRef={editInput}
                          placeholder="Add todo"
                          margin="normal"
                          type="search"
-                        onChange={e => { setTask(e.target.value); setValue('');} }/>
+                        onChange={e => { setCompletedTask(e.target.editValue); setEditValue("")}
+                       }/>
+                       <Button type="submit" variant="contained" endIcon={<AddIcon />} onClick={() => { setCompletedList(
+                        completedList.filter(a =>
+                          a.id !== completedTask.id
+                        )
+                      );
+                        setIsEditing(false);
+                        updateFieldChanged(index); console.log(completedTask)} }>     
+                       </Button>
+                     </Stack>
                     )
           :
           (
             <ListItemText primary={completedTask.completedTask} sx={{ margin: 2 }} /> 
           )}
-              <Button type="submit" variant="contained" endIcon={<EditIcon />} onClick={handleChange}
+              <Button type="submit" variant="contained" endIcon={<EditIcon />} onClick={ e => { handleEdit(e);} }
               >
               </Button>
               <Button type="submit" variant="contained" endIcon={<DeleteIcon />} onClick={() => {
