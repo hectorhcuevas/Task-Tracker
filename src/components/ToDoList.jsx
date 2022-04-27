@@ -10,10 +10,8 @@ import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import ListSubheader from '@mui/material/ListSubheader';
-import AddItem from './AddItem'
 import DeleteIcon from '@material-ui/icons/Delete';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Constants from './constants';
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
@@ -95,6 +93,11 @@ export default function ToDoList() {
     //setCompletedTask(e.target.value);
   };
 
+  function handleTodoEdit(e) {
+    setIsEditingTodo(true);
+    //setCompletedTask(e.target.value);
+  };
+
 
   function handleRemoveEdit() {
     // remove item
@@ -104,6 +107,17 @@ export default function ToDoList() {
       )
     )
   };
+
+  function handleTodoEditAdd() {
+    setTask("");
+    setIsEditingTodo(false);
+    setList([
+      ...list,
+      { id: nextId++, task: task
+    }
+    ]);
+    editInput.current.value = "";
+  }
 
   function handleEditAdd() {
     setCompletedTask("");
@@ -116,12 +130,19 @@ export default function ToDoList() {
     editInput.current.value = "";
   }
 
+  function updateTodoFieldChanged(index) {
+    const newArr = [...list];
+    newArr[index].task = editInput.current.value
+    setList(newArr);
+  }
+
   function updateFieldChanged(index) {
     const newArr = [...completedList];
     newArr[index].completedTask = editInput.current.value
     setCompletedList(newArr);
   }
   
+
 
   return (
     <Stack container spacing={5} direction="row" divider={<Divider orientation="vertical" flexItem />}>
@@ -140,15 +161,41 @@ export default function ToDoList() {
       <ListSubheader component="div" id="nested-list-subheader">
         To-Do Tasks
       </ListSubheader>
-      {list.map(task => (
+      {list.map((task, index) => (
         <ListItem key={task.id} dense button>
           <Checkbox className="checkbox" tabIndex={-1} disableRipple onChange={ e => { handleCompletedAdd(task.task);
               setList(
                 list.filter(a =>
                   a.id !== task.id
                 ) ) } }/>
+                { isEditingTodo ? (
+                  <Stack>
+                  <TextField
+                    className="toDoListText"
+                    variant="outlined"
+                    inputRef={editInput}
+                     placeholder="Add todo"
+                     margin="normal"
+                     type="search"
+                    onChange={e => { setTask(e.target.editValue); setEditValue("")}
+                   }/>
+                   <Button type="submit" variant="contained" endIcon={<AddIcon />} onClick={() => { setList(
+                    list.filter(a =>
+                      a.id !== task.id
+                    )
+                  );
+                    setIsEditingTodo(false);
+                    updateTodoFieldChanged(index);
+                  }
+                  }>     
+                   </Button>
+                 </Stack>
+                )
+              :
+              (
           <ListItemText primary={task.task} sx={{ margin: 2 }} inputRef={textInput} />
-              <Button type="submit" variant="contained" endIcon={<EditIcon />} onClick={handleEdit}
+              )}
+              <Button type="submit" variant="contained" endIcon={<EditIcon />} onClick={e => { handleTodoEdit(e) } }
               >
               </Button>
               <Button type="submit" variant="contained" endIcon={<DeleteIcon />} onClick={() => {
@@ -179,7 +226,7 @@ export default function ToDoList() {
         Completed Tasks
       </ListSubheader>
       {completedList.map((completedTask, index) => (
-        <ListItem key={completedTask.id} dense button onClick={(e) => { setActive(index); }} >
+        <ListItem key={completedTask.id} dense button >
               <Button className="undoCompletedTask" endIcon={<UndoIcon />} tabIndex={-1} disableRipple onClick={ e => { handleUndo(completedTask.completedTask); 
                   setCompletedList(
                     completedList.filter(a =>
@@ -205,7 +252,7 @@ export default function ToDoList() {
                         )
                       );
                         setIsEditing(false);
-                        updateFieldChanged(index); console.log(completedTask)} }>     
+                        updateFieldChanged(index)} }>     
                        </Button>
                      </Stack>
                     )

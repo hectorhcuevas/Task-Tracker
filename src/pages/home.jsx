@@ -3,8 +3,6 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
 import ToDoList from '../components/ToDoList';
-import DoneList from '../components/DoneList';
-import AddItem from '../components/AddItem';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import "./homepage.css";
