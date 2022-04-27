@@ -10,10 +10,8 @@ import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import ListSubheader from '@mui/material/ListSubheader';
-import AddItem from './AddItem'
 import DeleteIcon from '@material-ui/icons/Delete';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Constants from './constants';
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
